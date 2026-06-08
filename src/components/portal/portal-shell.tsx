@@ -47,7 +47,13 @@ export function PortalShell({ email, name, company, children }: PortalShellProps
   const pathname = usePathname() ?? "";
   const [drawer, setDrawer] = useState(false);
 
-  const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
+  // Longest matching nav href wins — prevents /portal/orders from lighting up
+  // when we're actually on /portal/orders/new.
+  const allHrefs = sections.flatMap((s) => s.items.map((i) => i.href));
+  const activeHref = allHrefs
+    .filter((h) => pathname === h || pathname.startsWith(h + "/"))
+    .sort((a, b) => b.length - a.length)[0];
+  const isActive = (href: string) => href === activeHref;
 
   const initials =
     (name || email || "U")
@@ -165,7 +171,11 @@ export function PortalShell({ email, name, company, children }: PortalShellProps
         </header>
 
         <main className="flex-1 p-6 md:p-10 lg:p-12 max-w-[1400px] w-full mx-auto">
-          {children}
+          {/* Keyed wrapper — re-mounts on route change, triggering the
+              fade-up animation so transitions feel intentional. */}
+          <div key={pathname} className="animate-fade-up">
+            {children}
+          </div>
         </main>
       </div>
 

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Loader2, Eye, EyeOff, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -23,6 +23,9 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  // After a successful login/signup we briefly show a "welcome" view
+  // before redirecting. Avoids the jarring instant page-swap.
+  const [redirecting, setRedirecting] = useState<{ greeting: string; target: string } | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -49,11 +52,24 @@ export function AuthForm({ mode }: AuthFormProps) {
           },
         });
         if (error) throw error;
+        // Show the celebratory interstitial for ~850ms, then route.
+        setRedirecting({
+          greeting: name ? `Welcome aboard, ${name.split(/\s+/)[0]}.` : "Welcome aboard.",
+          target: "/portal/dashboard",
+        });
+        await new Promise((r) => setTimeout(r, 850));
         router.push("/portal/dashboard");
         router.refresh();
       } else if (mode === "login") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        const meta = (data.user?.user_metadata ?? {}) as Record<string, string>;
+        const first = (meta.full_name ?? "").split(/\s+/)[0];
+        setRedirecting({
+          greeting: first ? `Welcome back, ${first}.` : "Welcome back.",
+          target: nextPath,
+        });
+        await new Promise((r) => setTimeout(r, 700));
         router.push(nextPath);
         router.refresh();
       } else if (mode === "forgot") {
@@ -67,9 +83,30 @@ export function AuthForm({ mode }: AuthFormProps) {
       const msg =
         err instanceof Error ? err.message : "Something went wrong. Try again.";
       setError(msg);
+      setRedirecting(null);
     } finally {
       setLoading(false);
     }
+  }
+
+  // Show the welcome interstitial in place of the form once auth succeeds
+  if (redirecting) {
+    return (
+      <div className="text-center py-10 animate-fade-up">
+        {/* Animated check inside a copper ring */}
+        <div className="relative mx-auto h-16 w-16">
+          <span aria-hidden className="absolute inset-0 rounded-full bg-[color:var(--color-copper-500)]/20 animate-ping" />
+          <span className="relative h-16 w-16 rounded-full bg-[color:var(--color-copper-500)] text-white flex items-center justify-center shadow-[0_8px_24px_-6px_rgba(201,137,47,0.45)]">
+            <Check className="h-7 w-7" strokeWidth={3} />
+          </span>
+        </div>
+        <h1 className="mt-6 text-3xl md:text-4xl font-display">{redirecting.greeting}</h1>
+        <p className="mt-3 text-[color:var(--color-stone)] flex items-center justify-center gap-2">
+          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          Loading your dashboard…
+        </p>
+      </div>
+    );
   }
 
   return (
