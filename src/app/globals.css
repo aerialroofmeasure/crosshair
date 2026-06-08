@@ -54,6 +54,10 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Leave room for the sticky header (h-20 mobile, h-24 desktop) so that
+       scroll-to-top on navigation and #anchor jumps don't hide content
+       behind the header. */
+    scroll-padding-top: 6rem;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
