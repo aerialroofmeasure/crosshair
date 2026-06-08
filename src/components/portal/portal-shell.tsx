@@ -68,7 +68,7 @@ export function PortalShell({ email, name, company, children }: PortalShellProps
       {/* =========================================
           DESKTOP SIDEBAR
           ========================================= */}
-      <aside className="hidden lg:flex w-80 flex-col bg-[color:var(--color-navy-900)] text-white relative">
+      <aside className="hidden lg:flex w-80 flex-col bg-[color:var(--color-navy-900)] text-white relative sticky top-0 h-screen self-start">
         {/* Subtle copper top accent */}
         <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--color-copper-400)]/40 to-transparent" />
 
