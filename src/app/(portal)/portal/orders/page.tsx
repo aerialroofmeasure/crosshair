@@ -1,13 +1,52 @@
-import { ArrowRight, FolderOpen, Search, FilePlus, Filter } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, FolderOpen, FilePlus, MapPin, Link2 } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { PageHeader } from "@/components/portal/page-header";
 import { EmptyCard } from "@/components/portal/empty-card";
+import { StatusPill } from "@/components/portal/status-pill";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { formatRef, type OrderStatus } from "@/lib/orders";
 
 export const metadata = { title: "Orders" };
+// Always fetch fresh — orders are inherently dynamic and per-user.
+export const dynamic = "force-dynamic";
 
-export default function OrdersPage() {
-  // No orders yet — will become a real list when DB is wired.
-  const orders: { id: string; address: string; type: string; status: string; date: string }[] = [];
+interface OrderRow {
+  id: string;
+  order_number: number;
+  service_name: string;
+  format: string;
+  speed: string;
+  status: OrderStatus;
+  location_mode: "type" | "link";
+  street: string | null;
+  city: string | null;
+  state: string | null;
+  zip: string | null;
+  maps_link: string | null;
+  total_cents: number;
+  created_at: string;
+}
+
+export default async function OrdersPage() {
+  let orders: OrderRow[] = [];
+
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data: userData } = await supabase.auth.getUser();
+    if (userData.user) {
+      const { data, error } = await supabase
+        .from("orders")
+        .select(
+          "id, order_number, service_name, format, speed, status, location_mode, street, city, state, zip, maps_link, total_cents, created_at"
+        )
+        .eq("user_id", userData.user.id)
+        .order("created_at", { ascending: false });
+      if (!error && data) orders = data as OrderRow[];
+    }
+  } catch {
+    // Supabase not configured — render empty state
+  }
 
   return (
     <div>
@@ -23,29 +62,8 @@ export default function OrdersPage() {
         }
       />
 
-      {/* Filter / search bar — visually present even when empty so the
-          shape of the page is set for when orders arrive. */}
-      <div className="mt-8 flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[260px] max-w-xl">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--color-stone)]" />
-          <input
-            type="text"
-            placeholder="Search by address, order ID, or report type"
-            disabled
-            className="w-full h-11 pl-10 pr-4 rounded-lg border border-[color:var(--color-border-soft)] bg-white text-sm shadow-[inset_0_1px_2px_rgba(11,30,58,0.04)] disabled:opacity-60 disabled:cursor-not-allowed"
-          />
-        </div>
-        <button
-          disabled
-          className="inline-flex items-center gap-2 h-11 px-4 rounded-lg border border-[color:var(--color-border-soft)] bg-white text-sm font-medium text-[color:var(--color-charcoal)] disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          <Filter className="h-4 w-4" />
-          All statuses
-        </button>
-      </div>
-
       {orders.length === 0 ? (
-        <div className="mt-8">
+        <div className="mt-10">
           <EmptyCard
             icon={<FolderOpen className="h-6 w-6" />}
             title="No orders yet"
@@ -60,10 +78,77 @@ export default function OrdersPage() {
           />
         </div>
       ) : (
-        <div className="mt-8 rounded-2xl border border-[color:var(--color-border-soft)] bg-white overflow-hidden">
-          {/* Future: order rows */}
+        <div className="mt-10 rounded-2xl border border-[color:var(--color-border-soft)] bg-white overflow-hidden">
+          <div className="hidden md:grid grid-cols-[140px_1fr_180px_160px_140px] gap-4 px-6 py-3 bg-[color:var(--color-warm-cream)]/40 text-[10px] font-semibold tracking-[0.16em] uppercase text-[color:var(--color-stone)]">
+            <div>Order</div>
+            <div>Property · Report</div>
+            <div>Status</div>
+            <div className="text-right">Total</div>
+            <div className="text-right">Placed</div>
+          </div>
+          <ul>
+            {orders.map((o) => (
+              <li
+                key={o.id}
+                className="grid grid-cols-1 md:grid-cols-[140px_1fr_180px_160px_140px] gap-4 px-6 py-5 border-t border-[color:var(--color-border-soft)] first:border-t-0 items-center hover:bg-[color:var(--color-warm-cream)]/20 transition"
+              >
+                <div className="font-numeric font-semibold text-sm text-[color:var(--color-navy-900)]">
+                  {formatRef(o.order_number)}
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-[color:var(--color-navy-900)] flex items-center gap-1.5">
+                    {o.location_mode === "link" ? (
+                      <Link2 className="h-3.5 w-3.5 text-[color:var(--color-stone)]" />
+                    ) : (
+                      <MapPin className="h-3.5 w-3.5 text-[color:var(--color-stone)]" />
+                    )}
+                    {addressLine(o)}
+                  </div>
+                  <div className="mt-0.5 text-xs text-[color:var(--color-stone)]">
+                    {o.service_name} · {formatLabel(o.format)} · {speedLabel(o.speed)}
+                  </div>
+                </div>
+                <div>
+                  <StatusPill status={o.status} />
+                </div>
+                <div className="text-right font-numeric font-semibold text-sm text-[color:var(--color-navy-900)]">
+                  ${(o.total_cents / 100).toFixed(0)}
+                </div>
+                <div className="text-right text-xs text-[color:var(--color-stone)]">
+                  {new Date(o.created_at).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </div>
+              </li>
+            ))}
+          </ul>
+          {/* Hint while no detail page exists yet */}
+          <div className="px-6 py-4 bg-[color:var(--color-warm-cream)]/30 border-t border-[color:var(--color-border-soft)] text-xs text-[color:var(--color-stone)]">
+            <Link
+              href="/portal/support"
+              className="text-[color:var(--color-copper-600)] font-medium hover:text-[color:var(--color-copper-700)]"
+            >
+              Question about an order?
+            </Link>{" "}
+            We&apos;ll respond within 4 business hours.
+          </div>
         </div>
       )}
     </div>
   );
+}
+
+function addressLine(o: OrderRow) {
+  if (o.location_mode === "link") return "Pinned via map link";
+  return [o.street, o.city, o.state, o.zip].filter(Boolean).join(", ");
+}
+
+function formatLabel(f: string) {
+  return f === "esx" ? "ESX" : f === "xml" ? "XML" : f === "bundle" ? "Bundle" : "PDF";
+}
+
+function speedLabel(s: string) {
+  return s === "rush" ? "Rush 6h" : s === "express" ? "Express 2h" : "Standard 24h";
 }

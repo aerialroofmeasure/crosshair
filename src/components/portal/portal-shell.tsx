@@ -17,6 +17,7 @@ import {
 import { Logo } from "@/components/brand/logo";
 import { SignOutButton } from "@/components/portal/sign-out-button";
 import { cn } from "@/lib/utils";
+import { isAdminEmail } from "@/lib/admin";
 
 const sections = [
   {
@@ -115,6 +116,19 @@ export function PortalShell({ email, name, company, children }: PortalShellProps
               </div>
             </div>
           ))}
+
+          {/* Admin shortcut — only visible to admin emails */}
+          {isAdminEmail(email) && (
+            <div className="mx-3 mt-4">
+              <Link
+                href="/admin/orders"
+                className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-[color:var(--color-copper-500)]/10 border border-[color:var(--color-copper-500)]/25 text-[color:var(--color-copper-200)] hover:bg-[color:var(--color-copper-500)]/15 transition"
+              >
+                <span className="text-xs font-semibold tracking-[0.16em] uppercase">Admin view</span>
+                <ArrowRight className="h-3 w-3" />
+              </Link>
+            </div>
+          )}
 
           {/* Support card */}
           <div className="mt-8 mx-3 rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">

@@ -45,7 +45,9 @@ export function OrderWizard({ prefill }: OrderWizardProps = {}) {
     company: prefill?.company ?? "",
     notes: "",
   });
-  const [state, setState] = useState<"idle" | "submitting" | "ok">("idle");
+  const [state, setState] = useState<"idle" | "submitting" | "ok" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [orderRef, setOrderRef] = useState<string | null>(null);
 
   const service = services.find((s) => s.slug === serviceSlug);
   const speedDef = speeds.find((s) => s.id === speed);
@@ -61,22 +63,58 @@ export function OrderWizard({ prefill }: OrderWizardProps = {}) {
 
   async function submit() {
     setState("submitting");
-    // TODO: persist to Supabase + send invoice via Resend.
-    await new Promise((r) => setTimeout(r, 700));
-    setState("ok");
+    setErrorMsg(null);
+    try {
+      const payload = {
+        customer_name: contact.name,
+        customer_email: contact.email,
+        customer_company: contact.company || undefined,
+        notes: contact.notes || undefined,
+        location_mode: location.mode,
+        street: location.address?.street,
+        city: location.address?.city,
+        state: location.address?.state,
+        zip: location.address?.zip,
+        maps_link: location.mapsLink,
+        service_slug: serviceSlug,
+        format,
+        speed,
+      };
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Couldn't place your order.");
+      setOrderRef(data.ref);
+      setState("ok");
+    } catch (e) {
+      setErrorMsg(e instanceof Error ? e.message : "Something went wrong. Try again.");
+      setState("error");
+    }
   }
 
   if (state === "ok") {
     return (
-      <div className="rounded-2xl border border-[color:var(--color-border-soft)] bg-white p-12 text-center">
-        <div className="mx-auto h-14 w-14 rounded-full bg-[color:var(--color-copper-500)]/15 text-[color:var(--color-copper-600)] flex items-center justify-center">
-          <Check className="h-7 w-7" />
+      <div className="rounded-2xl border border-[color:var(--color-border-soft)] bg-white p-12 text-center relative overflow-hidden">
+        <div aria-hidden className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[color:var(--color-copper-400)]/10 blur-3xl pointer-events-none" />
+        <div className="relative">
+          <div className="mx-auto h-16 w-16 rounded-full bg-[color:var(--color-copper-500)] text-white flex items-center justify-center shadow-[0_10px_24px_-6px_rgba(201,137,47,0.45)]">
+            <Check className="h-7 w-7" strokeWidth={3} />
+          </div>
+          {orderRef && (
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-[color:var(--color-warm-cream)] border border-[color:var(--color-border-soft)] px-3 py-1 text-xs font-numeric font-semibold text-[color:var(--color-navy-900)]">
+              Order {orderRef}
+            </div>
+          )}
+          <h2 className="mt-4 text-3xl md:text-4xl font-display">Order received.</h2>
+          <p className="mt-3 text-[color:var(--color-stone)] max-w-md mx-auto leading-relaxed">
+            We&apos;ll send an invoice to{" "}
+            <strong className="text-[color:var(--color-navy-900)]">{contact.email}</strong>{" "}
+            within a few minutes and start work as soon as it&apos;s paid.
+          </p>
         </div>
-        <h2 className="mt-5 text-3xl font-display">Order received.</h2>
-        <p className="mt-3 text-[color:var(--color-stone)] max-w-md mx-auto">
-          We&apos;ll send an invoice to <strong className="text-[color:var(--color-navy-900)]">{contact.email}</strong> within a few
-          minutes and start work as soon as it&apos;s paid. Standard delivery: within 24 hours.
-        </p>
       </div>
     );
   }
@@ -216,6 +254,12 @@ export function OrderWizard({ prefill }: OrderWizardProps = {}) {
                 we&apos;ll confirm before charging.
               </p>
             </div>
+
+            {state === "error" && errorMsg && (
+              <div className="mt-4 text-sm rounded-lg bg-red-50 border border-red-200 text-red-700 px-4 py-3">
+                {errorMsg}
+              </div>
+            )}
 
             <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
               <button
