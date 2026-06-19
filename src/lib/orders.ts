@@ -84,3 +84,65 @@ export const STATUS_TONES: Record<OrderStatus, "amber" | "blue" | "copper" | "na
   delivered: "navy",
   cancelled: "red",
 };
+
+/* ============================================================
+   Report-file requirements per ordered format.
+   Used to gate "mark complete" — an order can't be delivered
+   until the employee has uploaded the file kinds the customer
+   paid for.
+   ============================================================ */
+
+export type FileKind = "pdf" | "esx" | "xml" | "bundle" | "other";
+
+/**
+ * Which file kinds must be present before an order of a given format can
+ * be marked complete. A bundle ships both the PDF and the Xactimate ESX.
+ */
+export function requiredKindsForFormat(format: string): FileKind[] {
+  switch (format) {
+    case "pdf":
+      return ["pdf"];
+    case "xml":
+      return ["xml"];
+    case "esx":
+      return ["esx"];
+    case "bundle":
+      return ["pdf", "esx"];
+    default:
+      return ["pdf"];
+  }
+}
+
+/** Infer a file kind from its filename extension. */
+export function inferFileKind(fileName: string): FileKind {
+  const ext = fileName.toLowerCase().split(".").pop() ?? "";
+  if (ext === "pdf") return "pdf";
+  if (ext === "esx") return "esx";
+  if (ext === "xml") return "xml";
+  if (ext === "zip") return "bundle";
+  return "other";
+}
+
+export const FILE_KIND_LABELS: Record<FileKind, string> = {
+  pdf: "PDF",
+  esx: "ESX",
+  xml: "XML",
+  bundle: "Bundle (.zip)",
+  other: "File",
+};
+
+/** Format label helper — single source for the short format badge text. */
+export function formatLabelShort(format: string): string {
+  return format === "esx"
+    ? "ESX"
+    : format === "xml"
+      ? "XML"
+      : format === "bundle"
+        ? "Bundle"
+        : "PDF";
+}
+
+/** Speed label helper — short badge text. */
+export function speedLabelShort(speed: string): string {
+  return speed === "rush" ? "Rush 6h" : speed === "express" ? "Express 2h" : "Standard 24h";
+}

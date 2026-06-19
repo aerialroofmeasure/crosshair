@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Loader2, Eye, EyeOff, Check } from "lucide-react";
+import { Loader2, Eye, EyeOff, Check, ShieldCheck, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -14,10 +14,33 @@ interface AuthFormProps {
   mode: Mode;
 }
 
+/** Role accent for the login page, inferred from the post-login destination. */
+const PORTAL_ACCENTS = {
+  adm: {
+    label: "Admin console",
+    icon: ShieldCheck,
+    pill: "chip-adm-soft",
+    btn: "btn-adm hover:btn-adm-hover",
+  },
+  emp: {
+    label: "Fulfillment team",
+    icon: Wrench,
+    pill: "chip-emp-soft",
+    btn: "btn-emp hover:btn-emp-hover",
+  },
+} as const;
+
 export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextPath = searchParams.get("next") || "/portal/dashboard";
+  const portalAccent =
+    mode === "login" && nextPath.startsWith("/admin")
+      ? "adm"
+      : mode === "login" && nextPath.startsWith("/employee")
+        ? "emp"
+        : null;
+  const accent = portalAccent ? PORTAL_ACCENTS[portalAccent] : null;
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -111,6 +134,13 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   return (
     <div>
+      {accent && (
+        <div className={cn("mb-5 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold tracking-[0.08em] uppercase", accent.pill)}>
+          <accent.icon className="h-3.5 w-3.5" />
+          {accent.label} sign-in
+        </div>
+      )}
+
       <Heading mode={mode} />
 
       <form onSubmit={onSubmit} className="mt-10 space-y-5">
@@ -187,7 +217,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           type="submit"
           size="lg"
           disabled={loading}
-          className="w-full justify-center"
+          className={cn("w-full justify-center", accent?.btn)}
         >
           {loading ? (
             <>

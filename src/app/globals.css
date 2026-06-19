@@ -36,6 +36,22 @@
   --color-stone: #8a8f99;
   --color-border-soft: #e8e2d6;
 
+  /* Role accents — premium jewel tones distinguishing the portals while
+     keeping the navy + copper base. Employee = sapphire blue,
+     Admin = deep burgundy. Used as gradients, not flat fills. */
+  --color-emp-200: #b9d3f5;
+  --color-emp-300: #8fb6ec;
+  --color-emp-400: #4f86d6;
+  --color-emp-500: #2f6fc7;
+  --color-emp-600: #245aa6;
+  --color-emp-700: #1c4480;
+  --color-adm-200: #e7c2cb;
+  --color-adm-300: #cf94a1;
+  --color-adm-400: #a84257;
+  --color-adm-500: #8f2f43;
+  --color-adm-600: #6e2233;
+  --color-adm-700: #511826;
+
   /* Typography stacks */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-serif: var(--font-fraunces), ui-serif, Georgia, "Times New Roman", serif;
@@ -106,6 +122,13 @@
   letter-spacing: -0.02em;
 }
 
+/* Catchy display numerals — Space Grotesk — for showcase stats. */
+@utility font-stat {
+  font-family: var(--font-display-num), var(--font-numeric);
+  font-feature-settings: "tnum";
+  letter-spacing: -0.03em;
+}
+
 @utility eyebrow {
   font-family: var(--font-sans);
   font-size: 0.75rem;
@@ -140,6 +163,166 @@
 @utility texture-paper {
   background-image: radial-gradient(circle at 1px 1px, rgba(11, 30, 58, 0.05) 1px, transparent 0);
   background-size: 22px 22px;
+}
+
+/* ============================================================
+   Neumorphism — soft "extruded" surfaces for the portals.
+   Tuned for the warm-white / warm-cream backgrounds (light) and
+   the navy-900 sidebars (dark). Compose with rounded-* and padding.
+
+     .neu-card      raised panel (stat cards, list shells)
+     .neu-raised    small raised chip / icon tile
+     .neu-inset     pressed-in well (inputs, read-only fields)
+     .neu-pressed   permanently depressed (active nav item)
+     .neu-btn       tactile button (pair with neu-btn-hover/active)
+     .neu-dark-*    variants for navy surfaces
+   ============================================================ */
+
+@utility neu-card {
+  background-color: var(--color-warm-white);
+  border-radius: 1.25rem;
+  box-shadow:
+    7px 7px 18px rgba(11, 30, 58, 0.09),
+    -7px -7px 18px rgba(255, 255, 255, 0.92);
+}
+
+@utility neu-raised {
+  background-color: var(--color-warm-white);
+  box-shadow:
+    4px 4px 10px rgba(11, 30, 58, 0.10),
+    -4px -4px 10px rgba(255, 255, 255, 0.9);
+}
+
+@utility neu-inset {
+  background-color: var(--color-warm-cream);
+  box-shadow:
+    inset 3px 3px 7px rgba(11, 30, 58, 0.10),
+    inset -3px -3px 7px rgba(255, 255, 255, 0.85);
+}
+
+@utility neu-pressed {
+  background-color: var(--color-warm-cream);
+  box-shadow:
+    inset 4px 4px 9px rgba(11, 30, 58, 0.13),
+    inset -4px -4px 9px rgba(255, 255, 255, 0.8);
+}
+
+@utility neu-btn {
+  background-color: var(--color-warm-white);
+  box-shadow:
+    5px 5px 12px rgba(11, 30, 58, 0.10),
+    -5px -5px 12px rgba(255, 255, 255, 0.9);
+  transition:
+    box-shadow 0.18s var(--ease-out-soft),
+    transform 0.18s var(--ease-out-soft);
+}
+@utility neu-btn-hover {
+  box-shadow:
+    6px 6px 15px rgba(11, 30, 58, 0.12),
+    -6px -6px 15px rgba(255, 255, 255, 0.95);
+}
+@utility neu-btn-active {
+  box-shadow:
+    inset 4px 4px 9px rgba(11, 30, 58, 0.14),
+    inset -4px -4px 9px rgba(255, 255, 255, 0.8);
+}
+
+/* ============================================================
+   Role accent treatments — premium gradients + glows.
+   *-soft  → on light surfaces (login form, profile chips)
+   *-dark  → on the navy sidebars / headers
+   btn-*   → tactile gradient buttons
+   rail-*  → active-nav indicator bar
+   ============================================================ */
+
+@utility chip-emp-soft {
+  background-image: linear-gradient(135deg,
+    color-mix(in srgb, var(--color-emp-500) 16%, transparent),
+    color-mix(in srgb, var(--color-emp-300) 8%, transparent));
+  color: var(--color-emp-700);
+  border: 1px solid color-mix(in srgb, var(--color-emp-500) 28%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+@utility chip-adm-soft {
+  background-image: linear-gradient(135deg,
+    color-mix(in srgb, var(--color-adm-500) 16%, transparent),
+    color-mix(in srgb, var(--color-adm-300) 8%, transparent));
+  color: var(--color-adm-700);
+  border: 1px solid color-mix(in srgb, var(--color-adm-500) 28%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+@utility chip-emp-dark {
+  background-image: linear-gradient(135deg,
+    color-mix(in srgb, var(--color-emp-400) 28%, transparent),
+    color-mix(in srgb, var(--color-emp-500) 6%, transparent));
+  color: var(--color-emp-200);
+  border: 1px solid color-mix(in srgb, var(--color-emp-400) 35%, transparent);
+  box-shadow: 0 0 18px -6px color-mix(in srgb, var(--color-emp-400) 50%, transparent);
+}
+@utility chip-adm-dark {
+  background-image: linear-gradient(135deg,
+    color-mix(in srgb, var(--color-adm-400) 30%, transparent),
+    color-mix(in srgb, var(--color-adm-500) 6%, transparent));
+  color: var(--color-adm-200);
+  border: 1px solid color-mix(in srgb, var(--color-adm-400) 35%, transparent);
+  box-shadow: 0 0 18px -6px color-mix(in srgb, var(--color-adm-400) 55%, transparent);
+}
+
+@utility btn-emp {
+  background-image: linear-gradient(180deg, var(--color-emp-400), var(--color-emp-600));
+  color: #fff;
+  box-shadow: 0 10px 26px -10px color-mix(in srgb, var(--color-emp-500) 75%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+@utility btn-emp-hover { background-image: linear-gradient(180deg, var(--color-emp-300), var(--color-emp-500)); }
+@utility btn-adm {
+  background-image: linear-gradient(180deg, var(--color-adm-400), var(--color-adm-600));
+  color: #fff;
+  box-shadow: 0 10px 26px -10px color-mix(in srgb, var(--color-adm-500) 75%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+@utility btn-adm-hover { background-image: linear-gradient(180deg, var(--color-adm-300), var(--color-adm-500)); }
+
+@utility rail-emp {
+  background-image: linear-gradient(180deg, var(--color-emp-300), var(--color-emp-600));
+  box-shadow: 0 0 12px -2px color-mix(in srgb, var(--color-emp-400) 70%, transparent);
+}
+@utility rail-adm {
+  background-image: linear-gradient(180deg, var(--color-adm-300), var(--color-adm-600));
+  box-shadow: 0 0 12px -2px color-mix(in srgb, var(--color-adm-400) 70%, transparent);
+}
+
+@utility tile-emp {
+  background-image: linear-gradient(135deg,
+    color-mix(in srgb, var(--color-emp-400) 38%, transparent),
+    color-mix(in srgb, var(--color-emp-600) 18%, transparent));
+  color: var(--color-emp-200);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-emp-300) 28%, transparent);
+}
+@utility tile-adm {
+  background-image: linear-gradient(135deg,
+    color-mix(in srgb, var(--color-adm-400) 40%, transparent),
+    color-mix(in srgb, var(--color-adm-600) 18%, transparent));
+  color: var(--color-adm-200);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-adm-300) 30%, transparent);
+}
+
+/* Dark (navy) surface variants — sidebars and navy hero cards. */
+@utility neu-dark-card {
+  box-shadow:
+    7px 7px 18px rgba(0, 0, 0, 0.40),
+    -7px -7px 18px rgba(255, 255, 255, 0.035);
+}
+@utility neu-dark-inset {
+  box-shadow:
+    inset 3px 3px 8px rgba(0, 0, 0, 0.45),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.04);
+}
+@utility neu-dark-pressed {
+  box-shadow:
+    inset 4px 4px 10px rgba(0, 0, 0, 0.5),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.05);
 }
 
 /* ============================================================

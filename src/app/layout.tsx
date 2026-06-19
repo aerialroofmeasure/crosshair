@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, Inter_Tight } from "next/font/google";
+import { Fraunces, Inter, Inter_Tight, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+});
+
+// Catchy display numerals for showcase stats.
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display-num",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -50,7 +58,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${interTight.variable} ${fraunces.variable}`}
+      className={`${inter.variable} ${interTight.variable} ${fraunces.variable} ${spaceGrotesk.variable}`}
     >
       <body>{children}</body>
     </html>

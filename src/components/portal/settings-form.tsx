@@ -219,12 +219,7 @@ function Card({
   danger?: boolean;
 }) {
   return (
-    <section
-      className={cn(
-        "rounded-2xl border bg-white p-7 md:p-8",
-        danger ? "border-red-200" : "border-[color:var(--color-border-soft)]"
-      )}
-    >
+    <section className={cn("neu-card p-7 md:p-8", danger && "ring-1 ring-red-200")}>
       <div className="flex items-start gap-3 pb-5 border-b border-[color:var(--color-border-soft)]">
         <div
           className={cn(
@@ -273,7 +268,7 @@ function Field({
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
         disabled={disabled}
-        className="w-full h-11 px-4 rounded-lg border border-[color:var(--color-border-soft)] bg-white shadow-[inset_0_1px_2px_rgba(11,30,58,0.04)] focus:border-[color:var(--color-copper-500)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-copper-500)]/20 transition disabled:bg-[color:var(--color-warm-cream)]/40 disabled:text-[color:var(--color-stone)] disabled:cursor-not-allowed"
+        className="w-full h-11 px-4 rounded-lg neu-inset border-none text-[color:var(--color-navy-900)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-copper-500)]/30 transition disabled:text-[color:var(--color-stone)] disabled:cursor-not-allowed"
       />
       {hint && <span className="mt-1.5 block text-xs text-[color:var(--color-stone)]">{hint}</span>}
     </label>

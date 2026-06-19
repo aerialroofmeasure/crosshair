@@ -97,7 +97,7 @@ export function PortalShell({ email, name, company, children }: PortalShellProps
                       className={cn(
                         "relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] transition-colors",
                         active
-                          ? "bg-white/[0.07] text-white font-medium"
+                          ? "neu-dark-pressed text-white font-medium"
                           : "text-white/65 hover:text-white hover:bg-white/[0.04]"
                       )}
                     >
@@ -231,7 +231,7 @@ export function PortalShell({ email, name, company, children }: PortalShellProps
                           className={cn(
                             "flex items-center gap-3 px-3 py-3 rounded-lg text-[14px] transition-colors",
                             active
-                              ? "bg-white/[0.07] text-white font-medium"
+                              ? "neu-dark-pressed text-white font-medium"
                               : "text-white/65 hover:text-white hover:bg-white/[0.04]"
                           )}
                         >

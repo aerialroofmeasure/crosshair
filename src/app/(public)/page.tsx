@@ -87,15 +87,17 @@ export default function HomePage() {
           TRUST STRIP — animated stats (compact so it peeks above the fold)
           ========================================= */}
       <section className="border-y border-[color:var(--color-border-soft)] bg-[color:var(--color-warm-cream)]/40">
-        <div className="container-page py-12 md:py-16">
+        <div className="container-page py-10 md:py-12">
           <Reveal>
-            <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[color:var(--color-border-soft)]">
-              <Stat value={1240} suffix="+" label="Reports delivered" centered />
-              <Stat value={98.4} decimals={1} suffix="%" label="Average accuracy" centered />
-              <Stat value={18} suffix="hrs" label="Average turnaround" centered />
-              <Stat value={87} suffix="%" label="Repeat clients" centered />
+            <div className="neu-card p-4 md:p-5">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                <Stat value={1240} suffix="+" label="Reports delivered" centered inset />
+                <Stat value={98.4} decimals={1} suffix="%" label="Average accuracy" centered inset />
+                <Stat value={18} suffix="hrs" label="Average turnaround" centered inset />
+                <Stat value={87} suffix="%" label="Repeat clients" centered inset />
+              </div>
             </div>
-            <div className="mt-12 pt-10 border-t border-[color:var(--color-border-soft)] text-center max-w-2xl mx-auto">
+            <div className="mt-10 pt-8 border-t border-[color:var(--color-border-soft)] text-center max-w-2xl mx-auto">
               <p className="text-xs font-semibold tracking-[0.18em] uppercase text-[color:var(--color-copper-600)]">
                 Built by veterans · 9+ years measuring roofs
               </p>
@@ -132,7 +134,7 @@ export default function HomePage() {
               <Reveal key={s.slug} delay={i * 60}>
                 <Link
                   href={`/services/${s.slug}`}
-                  className="group relative block h-full rounded-2xl border border-[color:var(--color-border-soft)] bg-white p-7 overflow-hidden transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.025] hover:border-[color:var(--color-copper-400)] hover:shadow-[0_28px_60px_-18px_rgba(11,30,58,0.28),0_8px_22px_-8px_rgba(201,137,47,0.18)] hover:bg-gradient-to-b hover:from-white hover:to-[color:var(--color-copper-50)]/40"
+                  className="group relative block h-full neu-card p-7 overflow-hidden transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.025] hover:shadow-[0_28px_60px_-18px_rgba(11,30,58,0.28),0_8px_22px_-8px_rgba(201,137,47,0.18)]"
                 >
                   <span aria-hidden className="absolute -top-16 -right-16 h-44 w-44 rounded-full bg-[color:var(--color-copper-400)]/0 group-hover:bg-[color:var(--color-copper-400)]/15 blur-2xl transition-all duration-700" />
                   <span aria-hidden className="absolute inset-x-7 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--color-copper-500)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -178,9 +180,9 @@ export default function HomePage() {
           <div className="mt-14 grid gap-8 md:grid-cols-3">
             {steps.map((s, i) => (
               <Reveal key={s.title} delay={i * 120}>
-                <div className="relative">
+                <div className="relative h-full neu-card p-7 transition-transform duration-300 hover:-translate-y-1">
                   <div className="flex items-center gap-3">
-                    <span className="font-numeric text-sm font-semibold text-[color:var(--color-copper-600)]">
+                    <span className="font-numeric text-sm font-semibold text-[color:var(--color-copper-600)] h-8 w-8 rounded-lg neu-inset flex items-center justify-center">
                       0{i + 1}
                     </span>
                     <span className="h-px flex-1 bg-[color:var(--color-border-soft)]" />
@@ -211,7 +213,7 @@ export default function HomePage() {
       <section className="section-y">
         <div className="container-page">
           <Reveal>
-            <div className="rounded-3xl bg-[color:var(--color-navy-900)] text-white p-10 md:p-16 relative overflow-hidden">
+            <div className="rounded-3xl bg-[color:var(--color-navy-900)] text-white p-10 md:p-16 relative overflow-hidden neu-dark-card">
               <div aria-hidden className="absolute -right-20 -top-20 h-80 w-80 rounded-full border border-[color:var(--color-copper-500)]/15" />
               <div aria-hidden className="absolute right-8 top-8 h-40 w-40 rounded-full border border-[color:var(--color-copper-500)]/10" />
               <div className="relative grid md:grid-cols-2 gap-10 md:gap-16 items-center">
@@ -261,7 +263,7 @@ export default function HomePage() {
           <div className="mt-14 grid gap-6 md:grid-cols-3">
             {testimonials.map((t, i) => (
               <Reveal key={t.author} delay={i * 100}>
-                <figure className="rounded-2xl bg-white border border-[color:var(--color-border-soft)] p-8 flex flex-col h-full hover:shadow-[0_8px_24px_rgba(11,30,58,0.06)] hover:-translate-y-1 transition-all duration-300">
+                <figure className="neu-card p-8 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300">
                   <blockquote className="text-[17px] text-[color:var(--color-charcoal)] leading-relaxed flex-1">
                     &ldquo;{t.quote}&rdquo;
                   </blockquote>

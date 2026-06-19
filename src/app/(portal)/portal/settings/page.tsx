@@ -1,21 +1,15 @@
 import { PageHeader } from "@/components/portal/page-header";
 import { SettingsForm } from "@/components/portal/settings-form";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { ProfileIdentity } from "@/components/portal/profile-identity";
+import { getProfile } from "@/lib/profile";
 
 export const metadata = { title: "Settings" };
 
 export default async function SettingsPage() {
-  let email = "";
-  let name = "";
-  let company = "";
-  try {
-    const supabase = await createSupabaseServerClient();
-    const { data } = await supabase.auth.getUser();
-    email = data.user?.email ?? "";
-    const meta = (data.user?.user_metadata ?? {}) as Record<string, string>;
-    name = meta.full_name ?? "";
-    company = meta.company ?? "";
-  } catch {}
+  const profile = await getProfile();
+  const email = profile?.email ?? "";
+  const name = profile?.full_name ?? "";
+  const company = profile?.company ?? "";
 
   return (
     <div>
@@ -25,7 +19,13 @@ export default async function SettingsPage() {
         description="Profile, password and notification preferences."
       />
 
-      <div className="mt-10 max-w-3xl">
+      <div className="mt-10 max-w-3xl space-y-6">
+        <ProfileIdentity
+          name={name}
+          email={email}
+          roleLabel="Customer"
+          subtitle={company || "Aerial Roof Measure account"}
+        />
         <SettingsForm initialEmail={email} initialName={name} initialCompany={company} />
       </div>
     </div>

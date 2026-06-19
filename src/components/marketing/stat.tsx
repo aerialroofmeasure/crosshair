@@ -17,6 +17,8 @@ interface StatProps {
   centered?: boolean;
   /** Smaller, denser sizing — for tight strips. */
   compact?: boolean;
+  /** Seat the number inside a pressed-in neumorphic well. */
+  inset?: boolean;
 }
 
 export function Stat({
@@ -29,23 +31,27 @@ export function Stat({
   tone = "light",
   centered = false,
   compact = false,
+  inset = false,
 }: StatProps) {
   const numberSize = compact
     ? "text-3xl md:text-4xl"
-    : "text-5xl md:text-6xl";
+    : "text-4xl md:text-5xl";
   const labelSize = compact ? "text-xs md:text-sm" : "text-sm md:text-[15px]";
 
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 py-4 md:py-2 px-4",
+        "flex flex-col gap-2",
+        inset
+          ? cn("rounded-2xl px-4 py-4 md:py-5", tone === "dark" ? "neu-dark-inset" : "neu-pressed")
+          : "py-4 md:py-2 px-4",
         centered && "items-center text-center",
         className
       )}
     >
       <span
         className={cn(
-          "font-numeric font-semibold tracking-tight",
+          "font-stat font-semibold tracking-tight",
           numberSize,
           tone === "dark" ? "text-white" : "text-[color:var(--color-navy-900)]"
         )}

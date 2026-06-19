@@ -39,7 +39,7 @@ export async function updateSession(request: NextRequest) {
 
   // Protect portal + admin routes. Admin-specific authorization happens
   // inside the admin layout (email whitelist).
-  const protectedPrefixes = ["/portal", "/admin"];
+  const protectedPrefixes = ["/portal", "/admin", "/employee"];
   if (!user && protectedPrefixes.some((p) => request.nextUrl.pathname.startsWith(p))) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";

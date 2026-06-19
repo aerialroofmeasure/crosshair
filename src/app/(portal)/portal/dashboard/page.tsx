@@ -16,14 +16,32 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Dashboard" };
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
-  // Get the user's first name for the greeting
+  // Greeting name + live stats from the user's own orders.
   let firstName = "";
+  const stats = { active: 0, delivered: 0, spend30Cents: 0 };
   try {
     const supabase = await createSupabaseServerClient();
-    const { data } = await supabase.auth.getUser();
-    const meta = (data.user?.user_metadata ?? {}) as Record<string, string>;
+    const { data: userData } = await supabase.auth.getUser();
+    const meta = (userData.user?.user_metadata ?? {}) as Record<string, string>;
     firstName = (meta.full_name ?? "").split(/\s+/)[0] ?? "";
+
+    if (userData.user) {
+      const { data } = await supabase
+        .from("orders")
+        .select("status, total_cents, created_at")
+        .eq("user_id", userData.user.id);
+      const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+      for (const o of (data ?? []) as { status: string; total_cents: number; created_at: string }[]) {
+        if (o.status === "paid" || o.status === "in_progress") stats.active++;
+        if (o.status === "delivered") stats.delivered++;
+        if (o.status !== "cancelled" && o.status !== "pending_payment" && new Date(o.created_at).getTime() >= cutoff) {
+          stats.spend30Cents += o.total_cents;
+        }
+      }
+    }
   } catch {}
 
   return (
@@ -44,19 +62,19 @@ export default async function DashboardPage() {
       <div className="mt-10 grid gap-4 md:grid-cols-3">
         <StatCard
           label="Active orders"
-          value="0"
+          value={String(stats.active)}
           hint="Live reports in progress"
           icon={<FolderOpen className="h-4 w-4" />}
         />
         <StatCard
           label="Reports delivered"
-          value="0"
+          value={String(stats.delivered)}
           hint="Lifetime total"
           icon={<ShieldCheck className="h-4 w-4" />}
         />
         <StatCard
           label="Spend · last 30 days"
-          value="$0"
+          value={`$${(stats.spend30Cents / 100).toFixed(0)}`}
           hint="Across all report types"
           icon={<Receipt className="h-4 w-4" />}
         />
@@ -176,12 +194,12 @@ function StatCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="group rounded-2xl border border-[color:var(--color-border-soft)] bg-white p-6 transition-all hover:border-[color:var(--color-copper-300)] hover:shadow-[0_12px_30px_-12px_rgba(11,30,58,0.12)]">
+    <div className="group neu-card p-6 transition-transform hover:-translate-y-0.5">
       <div className="flex items-center justify-between">
         <span className="text-xs font-semibold tracking-[0.14em] uppercase text-[color:var(--color-stone)]">
           {label}
         </span>
-        <span className="h-8 w-8 rounded-lg bg-[color:var(--color-warm-cream)] text-[color:var(--color-copper-700)] flex items-center justify-center transition-colors group-hover:bg-[color:var(--color-copper-500)]/15">
+        <span className="h-8 w-8 rounded-lg neu-inset text-[color:var(--color-copper-700)] flex items-center justify-center">
           {icon}
         </span>
       </div>
