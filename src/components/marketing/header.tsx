@@ -29,43 +29,43 @@ export function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 transition-all duration-300",
-        // At the top: solid, full-width, in place. On scroll: a floating glass bar.
-        scrolled ? "px-3 sm:px-5 pt-3" : "bg-[color:var(--color-warm-white)]"
+        // Same properties in both states — only the VALUES change, so everything
+        // interpolates smoothly. Top: solid, full-width, flush. Scrolled: inset glass bar.
+        "sticky top-0 z-50 transition-[padding,background-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        scrolled
+          ? "px-3 sm:px-5 pt-3 bg-transparent"
+          : "px-0 pt-0 bg-[color:var(--color-warm-white)]"
       )}
     >
-      {/* Hairline copper accent across the very top edge — only in the solid (top) state */}
-      {!scrolled && (
-        <div
-          aria-hidden
-          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--color-copper-400)]/40 to-transparent"
-        />
-      )}
-
       <div
         className={cn(
-          "flex items-center justify-between gap-6 relative transition-all duration-300",
+          "mx-auto flex items-center justify-between gap-6 relative overflow-hidden border backdrop-blur-xl",
+          "transition-[max-width,height,padding,border-radius,border-color,background-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
           scrolled
-            ? "mx-auto max-w-[78rem] h-16 md:h-[68px] px-5 md:px-7 rounded-2xl border border-white/55 bg-[color:var(--color-warm-white)]/55 backdrop-blur-xl shadow-[0_14px_40px_-14px_rgba(11,30,58,0.28)] ring-1 ring-black/[0.02] overflow-hidden"
-            : "container-page h-20 md:h-24"
+            ? "max-w-[78rem] h-16 md:h-[68px] px-5 md:px-7 rounded-2xl border-white/55 bg-[color:var(--color-warm-white)]/55 shadow-[0_14px_40px_-14px_rgba(11,30,58,0.28)]"
+            : "max-w-[80rem] h-20 md:h-24 px-6 rounded-none border-transparent bg-[color:var(--color-warm-white)]/0 shadow-[0_0_0_0_rgba(11,30,58,0)]"
         )}
       >
-        {/* Copper sheen along the top edge of the glass bar */}
-        {scrolled && (
-          <span aria-hidden className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--color-copper-400)]/55 to-transparent" />
-        )}
+        {/* Copper sheen along the top edge — fades in with the glass */}
+        <span
+          aria-hidden
+          className={cn(
+            "absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--color-copper-400)]/55 to-transparent transition-opacity duration-500",
+            scrolled ? "opacity-100" : "opacity-0"
+          )}
+        />
         {/* Logo */}
         <Link
           href="/"
           aria-label="Aerial Roof Measure home"
           className="flex items-center flex-shrink-0 transition-opacity hover:opacity-90"
-          style={{ minWidth: scrolled ? "240px" : "280px" }}
+          style={{ minWidth: "256px" }}
         >
           <Logo
             variant="lockup"
             className={cn(
-              "w-auto origin-left transition-transform duration-300 ease-out",
-              scrolled ? "h-10 md:h-11 scale-100" : "h-14 md:h-16 scale-100"
+              "w-auto origin-left transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              scrolled ? "h-14 md:h-16 scale-[0.72]" : "h-14 md:h-16 scale-100"
             )}
           />
         </Link>
