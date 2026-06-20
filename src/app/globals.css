@@ -380,6 +380,16 @@
   animation: reticle-spin 22s linear infinite;
 }
 
+/* Service tile: cross-fade the front view over the roof view, looping. */
+@keyframes svc-switch {
+  0%, 12% { opacity: 0; }
+  28%, 60% { opacity: 1; }
+  76%, 100% { opacity: 0; }
+}
+@utility animate-svc-switch {
+  animation: svc-switch 8s ease-in-out infinite;
+}
+
 /* Stagger helper — combine with .animate-fade-up */
 .stagger > * { opacity: 0; animation: fade-up-stagger 0.7s var(--ease-out-soft) both; }
 .stagger > *:nth-child(1) { animation-delay: 0.05s; }

@@ -4,7 +4,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { Eyebrow } from "@/components/marketing/eyebrow";
 import { TatBadge } from "@/components/marketing/tat-badge";
 import { Stat } from "@/components/marketing/stat";
-import { ServiceIcon } from "@/components/marketing/service-icon";
+import { ServiceArt } from "@/components/marketing/service-art";
 import { RoofScan } from "@/components/marketing/roof-scan";
 import { Reveal } from "@/components/marketing/reveal";
 import { PriceTag } from "@/components/marketing/price-tag";
@@ -140,9 +140,10 @@ export default function HomePage() {
                   <span aria-hidden className="absolute inset-x-7 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--color-copper-500)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                   <div className="relative">
-                    <ServiceIcon
-                      name={s.icon}
-                      className="transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-3"
+                    <ServiceArt
+                      slug={s.slug}
+                      name={s.name}
+                      className="mb-1 transition-transform duration-500 ease-out group-hover:-translate-y-1"
                     />
                     <h3 className="mt-6 text-xl font-display transition-colors group-hover:text-[color:var(--color-copper-700)]">{s.name}</h3>
                     <p className="mt-2 text-[15px] text-[color:var(--color-stone)] leading-relaxed">

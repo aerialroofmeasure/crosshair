@@ -30,30 +30,42 @@ export function Header() {
     <header
       className={cn(
         "sticky top-0 z-50 transition-all duration-300",
-        scrolled
-          ? "bg-[color:var(--color-warm-white)]/92 backdrop-blur-md shadow-[0_1px_0_rgba(11,30,58,0.04),0_4px_24px_-8px_rgba(11,30,58,0.08)]"
-          : "bg-[color:var(--color-warm-white)]"
+        // At the top: solid, full-width, in place. On scroll: a floating glass bar.
+        scrolled ? "px-3 sm:px-5 pt-3" : "bg-[color:var(--color-warm-white)]"
       )}
     >
-      {/* Hairline copper accent across the very top edge */}
-      <div
-        aria-hidden
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--color-copper-400)]/40 to-transparent"
-      />
+      {/* Hairline copper accent across the very top edge — only in the solid (top) state */}
+      {!scrolled && (
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--color-copper-400)]/40 to-transparent"
+        />
+      )}
 
-      <div className="container-page flex items-center justify-between gap-6 h-20 md:h-24">
+      <div
+        className={cn(
+          "flex items-center justify-between gap-6 relative transition-all duration-300",
+          scrolled
+            ? "mx-auto max-w-[78rem] h-16 md:h-[68px] px-5 md:px-7 rounded-2xl border border-white/55 bg-[color:var(--color-warm-white)]/55 backdrop-blur-xl shadow-[0_14px_40px_-14px_rgba(11,30,58,0.28)] ring-1 ring-black/[0.02] overflow-hidden"
+            : "container-page h-20 md:h-24"
+        )}
+      >
+        {/* Copper sheen along the top edge of the glass bar */}
+        {scrolled && (
+          <span aria-hidden className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--color-copper-400)]/55 to-transparent" />
+        )}
         {/* Logo */}
         <Link
           href="/"
           aria-label="Aerial Roof Measure home"
           className="flex items-center flex-shrink-0 transition-opacity hover:opacity-90"
-          style={{ minWidth: "280px" }}
+          style={{ minWidth: scrolled ? "240px" : "280px" }}
         >
           <Logo
             variant="lockup"
             className={cn(
               "w-auto origin-left transition-transform duration-300 ease-out",
-              scrolled ? "h-12 md:h-14 scale-[0.88]" : "h-14 md:h-16 scale-100"
+              scrolled ? "h-10 md:h-11 scale-100" : "h-14 md:h-16 scale-100"
             )}
           />
         </Link>
@@ -139,18 +151,17 @@ export function Header() {
         </button>
       </div>
 
-      {/* Subtle bottom rule when scrolled */}
-      {scrolled && (
-        <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 h-px bg-[color:var(--color-border-soft)]"
-        />
-      )}
-
       {/* Mobile drawer */}
       {open && (
-        <div className="lg:hidden bg-[color:var(--color-warm-white)] border-t border-[color:var(--color-border-soft)] animate-fade-in">
-          <nav className="container-page py-6 flex flex-col gap-1" aria-label="Mobile">
+        <div
+          className={cn(
+            "lg:hidden animate-fade-in",
+            scrolled
+              ? "mt-2 rounded-2xl border border-white/55 bg-[color:var(--color-warm-white)]/85 backdrop-blur-xl shadow-[0_14px_40px_-14px_rgba(11,30,58,0.28)]"
+              : "bg-[color:var(--color-warm-white)] border-t border-[color:var(--color-border-soft)]"
+          )}
+        >
+          <nav className={cn("flex flex-col gap-1", scrolled ? "px-5 py-5" : "container-page py-6")} aria-label="Mobile">
             {mainNav.map((item) => {
               const active = isActive(item.href);
               return (

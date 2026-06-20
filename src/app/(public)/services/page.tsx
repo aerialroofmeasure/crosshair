@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/eyebrow";
-import { ServiceIcon } from "@/components/marketing/service-icon";
+import { ServiceArt } from "@/components/marketing/service-art";
 import { PriceTag } from "@/components/marketing/price-tag";
 import { services } from "@/lib/site-config";
 
@@ -47,9 +47,10 @@ export default function ServicesPage() {
                 />
 
                 <div className="relative">
-                  <ServiceIcon
-                    name={s.icon}
-                    className="transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-3"
+                  <ServiceArt
+                    slug={s.slug}
+                    name={s.name}
+                    className="transition-transform duration-500 ease-out group-hover:-translate-y-1"
                   />
                   <h2 className="mt-6 text-2xl font-display transition-colors group-hover:text-[color:var(--color-copper-700)]">
                     {s.name}

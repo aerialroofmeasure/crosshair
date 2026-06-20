@@ -4,7 +4,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { Eyebrow } from "@/components/marketing/eyebrow";
 import { TatBadge } from "@/components/marketing/tat-badge";
-import { ServiceIcon } from "@/components/marketing/service-icon";
+import { ServiceArt } from "@/components/marketing/service-art";
 import { PriceTag } from "@/components/marketing/price-tag";
 import { services } from "@/lib/site-config";
 
@@ -201,7 +201,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           {/* Right — Sidebar */}
           <aside className="space-y-6 lg:sticky lg:top-28 self-start">
             <div className="rounded-2xl border border-[color:var(--color-border-soft)] bg-white p-7">
-              <ServiceIcon name={service.icon} />
+              <ServiceArt slug={service.slug} name={service.name} />
               <h3 className="mt-5 text-lg font-display">Available formats</h3>
               <ul className="mt-3 space-y-2 text-sm">
                 {service.deliverables.map((d) => (
@@ -241,7 +241,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 href={`/services/${s.slug}`}
                 className="group rounded-2xl border border-[color:var(--color-border-soft)] bg-white p-7 hover:border-[color:var(--color-copper-300)] transition-all"
               >
-                <ServiceIcon name={s.icon} />
+                <ServiceArt slug={s.slug} name={s.name} />
                 <h3 className="mt-5 text-xl font-display">{s.name}</h3>
                 <p className="mt-2 text-[15px] text-[color:var(--color-stone)]">{s.blurb}</p>
                 <div className="mt-5 inline-flex items-center gap-2 text-sm text-[color:var(--color-copper-600)] font-medium">
