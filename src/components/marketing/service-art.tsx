@@ -19,6 +19,8 @@ export function ServiceArt({
 }) {
   const label = name ?? "Service";
   const sizes = "(max-width: 768px) 90vw, (max-width: 1200px) 45vw, 380px";
+  // Bump when the source images change, to bust browser/CDN image caches.
+  const v = "2";
 
   return (
     <div
@@ -29,7 +31,7 @@ export function ServiceArt({
     >
       {/* Roof / top view — base layer */}
       <Image
-        src={`/services/${slug}-top.jpg`}
+        src={`/services/${slug}-top-v${v}.jpg`}
         alt={`${label} — roof view`}
         fill
         sizes={sizes}
@@ -37,7 +39,7 @@ export function ServiceArt({
       />
       {/* Front view — cross-fades over the top; snaps in on hover */}
       <Image
-        src={`/services/${slug}-front.jpg`}
+        src={`/services/${slug}-front-v${v}.jpg`}
         alt={`${label} — front view`}
         fill
         sizes={sizes}
