@@ -13,6 +13,7 @@ import {
   FORMAT_LABELS,
 } from "@/lib/orders";
 import { siteConfig } from "@/lib/site-config";
+import { orderConfirmationEmail, newOrderAlertEmail } from "@/lib/email";
 
 /**
  * POST /api/orders — create a new order.
@@ -104,56 +105,49 @@ export async function POST(req: Request) {
   if (process.env.RESEND_API_KEY) {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const totalUsd = (row.total_cents / 100).toFixed(0);
-    const addressLine = payload.location_mode === "type"
-      ? `${payload.street}, ${payload.city}, ${payload.state} ${payload.zip}`
-      : payload.maps_link;
+    const addressLine =
+      payload.location_mode === "type"
+        ? `${payload.street}, ${payload.city}, ${payload.state} ${payload.zip}`
+        : payload.maps_link || "Map link";
+
+    const emailData = {
+      customerName: row.customer_name,
+      customerEmail: row.customer_email,
+      customerCompany: payload.customer_company ?? null,
+      ref,
+      addressLine,
+      serviceName: pricing.service.name,
+      formatLabel: FORMAT_LABELS[payload.format as Format],
+      speedLabel: SPEED_LABELS[payload.speed as Speed],
+      totalUsd,
+      notes: payload.notes ?? null,
+    };
 
     // Customer confirmation
     try {
+      const mail = orderConfirmationEmail(emailData);
       await resend.emails.send({
         from: `Aerial Roof Measure <${siteConfig.email.orders}>`,
         to: [row.customer_email],
         replyTo: siteConfig.email.orders,
-        subject: `Order ${ref} received — invoice coming shortly`,
-        text:
-          `Hi ${row.customer_name},\n\n` +
-          `Thanks for ordering with Aerial Roof Measure. Here's your order summary:\n\n` +
-          `Order: ${ref}\n` +
-          `Property: ${addressLine}\n` +
-          `Report: ${pricing.service.name}\n` +
-          `Format: ${FORMAT_LABELS[payload.format as Format]}\n` +
-          `Delivery: ${SPEED_LABELS[payload.speed as Speed]}\n` +
-          `Estimated total: $${totalUsd}\n\n` +
-          `We'll send a payment invoice to this email within a few minutes. ` +
-          `Once it's settled, we'll start measuring and have your report ready ` +
-          `within the timeframe you selected.\n\n` +
-          `Questions? Reply to this email and we'll get back to you within 4 business hours.\n\n` +
-          `— Aerial Roof Measure`,
+        subject: mail.subject,
+        html: mail.html,
+        text: mail.text,
       });
     } catch (e) {
       console.error("[orders] customer email failed", e);
     }
 
-    // Admin alert
+    // Internal new-order alert
     try {
+      const mail = newOrderAlertEmail({ ...emailData, manageUrl: `${siteConfig.url}/admin/orders` });
       await resend.emails.send({
         from: `Aerial Roof Measure Orders <${siteConfig.email.orders}>`,
         to: [siteConfig.email.orders],
         replyTo: row.customer_email,
-        subject: `New order ${ref} — ${pricing.service.name} · $${totalUsd}`,
-        text:
-          `New order: ${ref}\n` +
-          `\n` +
-          `From: ${row.customer_name} <${row.customer_email}>` +
-          (payload.customer_company ? ` · ${payload.customer_company}` : "") +
-          `\n` +
-          `Property: ${addressLine}\n` +
-          `Report: ${pricing.service.name}\n` +
-          `Format: ${FORMAT_LABELS[payload.format as Format]}\n` +
-          `Delivery: ${SPEED_LABELS[payload.speed as Speed]}\n` +
-          `Total: $${totalUsd}\n` +
-          (payload.notes ? `\nNotes: ${payload.notes}\n` : "") +
-          `\nManage at ${siteConfig.url}/admin/orders\n`,
+        subject: mail.subject,
+        html: mail.html,
+        text: mail.text,
       });
     } catch (e) {
       console.error("[orders] admin email failed", e);

@@ -26,13 +26,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div aria-hidden className="absolute left-1/2 -translate-x-1/2 top-0 h-12 w-72 bg-[color:var(--color-adm-500)]/20 blur-2xl pointer-events-none" />
         <div className="container-page flex items-center justify-between gap-6 h-16 relative">
           <div className="flex items-center gap-6">
-            <Link href="/admin/orders" aria-label="Admin home" className="flex items-center">
+            <Link href="/admin" aria-label="Admin home" className="flex items-center">
               <Logo tone="white" variant="lockup" className="h-9 w-auto" noTagline />
             </Link>
             <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full chip-adm-dark px-2.5 py-1 text-[10px] font-semibold tracking-[0.18em] uppercase">
               Admin
             </span>
             <nav className="hidden md:flex items-center gap-1">
+              <AdminNavLink href="/admin" label="Overview" />
               <AdminNavLink href="/admin/orders" label="Orders" />
               <AdminNavLink href="/admin/employees" label="Employees" />
               <AdminNavLink href="/admin/customers" label="Customers" />

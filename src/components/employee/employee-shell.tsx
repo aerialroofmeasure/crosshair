@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
+  LayoutDashboard,
   Inbox,
   Loader,
   CheckCircle2,
@@ -18,7 +19,8 @@ import { SignOutButton } from "@/components/portal/sign-out-button";
 import { cn } from "@/lib/utils";
 
 const nav = [
-  { href: "/employee", label: "Queue", icon: Inbox, hint: "Unassigned work" },
+  { href: "/employee", label: "Home", icon: LayoutDashboard, hint: "Your overview" },
+  { href: "/employee/queue", label: "Queue", icon: Inbox, hint: "Unassigned work" },
   { href: "/employee/ongoing", label: "Ongoing", icon: Loader, hint: "Your active orders" },
   { href: "/employee/completed", label: "Completed", icon: CheckCircle2, hint: "Delivered by you" },
   { href: "/employee/profile", label: "Profile", icon: UserCircle, hint: "Account & stats" },

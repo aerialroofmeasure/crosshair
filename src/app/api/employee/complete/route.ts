@@ -4,6 +4,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { assertStaff } from "@/lib/profile";
 import { requiredKindsForFormat, inferFileKind, formatRef } from "@/lib/orders";
 import { siteConfig } from "@/lib/site-config";
+import { reportReadyEmail } from "@/lib/email";
 
 const BUCKET = "reports";
 const MAX_FILE_BYTES = 50 * 1024 * 1024; // 50 MB per file
@@ -136,16 +137,18 @@ export async function POST(req: Request) {
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
       const ref = formatRef(order.order_number);
+      const mail = reportReadyEmail({
+        customerName: order.customer_name,
+        ref,
+        serviceName: order.service_name,
+      });
       await resend.emails.send({
         from: `Aerial Roof Measure <${siteConfig.email.orders}>`,
         to: [order.customer_email],
         replyTo: siteConfig.email.support,
-        subject: `Your report is ready — order ${ref}`,
-        text:
-          `Hi ${order.customer_name},\n\n` +
-          `Good news — your ${order.service_name} report (${ref}) is ready.\n\n` +
-          `Sign in to download it any time: ${siteConfig.url}/portal/orders\n\n` +
-          `Questions? Just reply to this email.\n\n— Aerial Roof Measure`,
+        subject: mail.subject,
+        html: mail.html,
+        text: mail.text,
       });
     } catch (e) {
       console.error("[employee/complete] email failed", e);
