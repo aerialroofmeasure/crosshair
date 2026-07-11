@@ -44,7 +44,7 @@ export async function POST(req: Request) {
   // --- Server-side price calculation ------------------------------------
   let pricing;
   try {
-    pricing = priceOrderCents(payload.service_slug, payload.speed);
+    pricing = priceOrderCents(payload.service_slug, payload.format, payload.speed);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Invalid pricing";
     return NextResponse.json({ error: msg }, { status: 400 });

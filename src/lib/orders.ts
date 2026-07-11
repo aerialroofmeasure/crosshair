@@ -17,15 +17,23 @@ export const SPEED_LABELS = {
   express: "Express · 2h",
 } as const;
 
-export const FORMAT_LABELS = {
-  pdf: "PDF",
+export type Format = "pdf" | "esx" | "xml" | "esx_pdf" | "xml_pdf";
+
+export const FORMAT_LABELS: Record<string, string> = {
+  pdf: "PDF report",
   esx: "ESX (Xactimate)",
   xml: "XML",
-  bundle: "Bundle",
-} as const;
+  esx_pdf: "ESX + PDF",
+  xml_pdf: "XML + PDF",
+  bundle: "Bundle", // legacy orders placed before per-format pricing
+};
 
 export type Speed = keyof typeof SPEED_MULTIPLIERS;
-export type Format = keyof typeof FORMAT_LABELS;
+
+/** Format ids a given service offers, in list order. */
+export function serviceFormats(service: { prices: Record<string, number> }): Format[] {
+  return Object.keys(service.prices) as Format[];
+}
 
 export type LocationMode = "type" | "link";
 export type OrderStatus =
@@ -51,12 +59,14 @@ export interface OrderPayload {
   speed: Speed;
 }
 
-export function priceOrderCents(serviceSlug: string, speed: Speed) {
+export function priceOrderCents(serviceSlug: string, format: string, speed: Speed) {
   const service = services.find((s) => s.slug === serviceSlug);
   if (!service) throw new Error(`Unknown service: ${serviceSlug}`);
   const multiplier = SPEED_MULTIPLIERS[speed];
   if (!multiplier) throw new Error(`Unknown speed: ${speed}`);
-  const baseCents = service.startsAt * 100;
+  const unit = service.prices[format];
+  if (unit == null) throw new Error(`Format not available for ${service.name}: ${format}`);
+  const baseCents = unit * 100;
   const totalCents = Math.round(baseCents * multiplier);
   return {
     service,
@@ -106,7 +116,11 @@ export function requiredKindsForFormat(format: string): FileKind[] {
       return ["xml"];
     case "esx":
       return ["esx"];
-    case "bundle":
+    case "esx_pdf":
+      return ["esx", "pdf"];
+    case "xml_pdf":
+      return ["xml", "pdf"];
+    case "bundle": // legacy
       return ["pdf", "esx"];
     default:
       return ["pdf"];
@@ -133,13 +147,15 @@ export const FILE_KIND_LABELS: Record<FileKind, string> = {
 
 /** Format label helper — single source for the short format badge text. */
 export function formatLabelShort(format: string): string {
-  return format === "esx"
-    ? "ESX"
-    : format === "xml"
-      ? "XML"
-      : format === "bundle"
-        ? "Bundle"
-        : "PDF";
+  const map: Record<string, string> = {
+    pdf: "PDF",
+    esx: "ESX",
+    xml: "XML",
+    esx_pdf: "ESX+PDF",
+    xml_pdf: "XML+PDF",
+    bundle: "Bundle",
+  };
+  return map[format] ?? format.toUpperCase();
 }
 
 /** Speed label helper — short badge text. */

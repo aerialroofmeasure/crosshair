@@ -98,23 +98,33 @@ const detailCopy: Record<string, { intro: string; includes: string[]; ideal: str
     ],
     usedBy: ["Gutter installers", "Roofing contractors bundling gutters", "Restoration teams"],
   },
-  "insurance-esx": {
+  blueprint: {
     intro:
-      "Xactimate-ready ESX files for adjusters, restoration teams and insurance-side estimators. Drops straight into your sketch.",
+      "A fast, blueprint-style roof report — total roof area, plane breakdown and pitch, delivered as a clean PDF for quick quoting.",
     includes: [
-      "ESX file ready to import into Xactimate Sketch",
-      "PDF supporting documentation",
-      "Photo overlays for claim file",
-      "Pitch, area and perimeter values matched to Xactimate convention",
-      "Optional XML export for other estimating platforms",
+      "Total roof area in squares",
+      "Plane-by-plane area and pitch",
+      "Ridge, hip, valley and eave lengths",
+      "Labeled roof diagram",
+      "Fast PDF turnaround",
     ],
     ideal: [
-      "Storm hail and wind claims",
-      "Adjuster-side measurement verification",
-      "Restoration estimating",
-      "Carrier audits",
+      "Quick re-roof quotes",
+      "Preliminary estimates",
+      "Sales walk-throughs",
     ],
-    usedBy: ["Independent adjusters", "Carrier-side estimators", "Restoration estimators"],
+    usedBy: ["Roofing contractors", "Sales teams", "Estimators"],
+  },
+  "quick-squares": {
+    intro:
+      "Just the number you need — total roof area in squares — for the fastest possible quote.",
+    includes: [
+      "Total roof area in squares",
+      "Simple one-page PDF",
+      "Fast turnaround",
+    ],
+    ideal: ["Ballpark quotes", "Quick material takeoffs", "Phone estimates"],
+    usedBy: ["Roofing contractors", "Sales reps", "Suppliers"],
   },
 };
 

@@ -5,19 +5,13 @@ import { ArrowRight, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LocationInput, type LocationValue } from "@/components/order/location-input";
 import { services } from "@/lib/site-config";
+import { FORMAT_LABELS } from "@/lib/orders";
 import { cn } from "@/lib/utils";
 
 const speeds = [
   { id: "standard", label: "Standard", detail: "Within 24 hours", multiplier: 1 },
   { id: "rush", label: "Rush", detail: "Within 6 hours", multiplier: 1.5 },
   { id: "express", label: "Express", detail: "Within 2 hours", multiplier: 2 },
-] as const;
-
-const formats = [
-  { id: "pdf", label: "PDF" },
-  { id: "esx", label: "ESX (Xactimate)" },
-  { id: "xml", label: "XML" },
-  { id: "bundle", label: "Bundle (all)" },
 ] as const;
 
 interface OrderWizardProps {
@@ -51,8 +45,13 @@ export function OrderWizard({ prefill }: OrderWizardProps = {}) {
 
   const service = services.find((s) => s.slug === serviceSlug);
   const speedDef = speeds.find((s) => s.id === speed);
-  const basePrice = service?.startsAt ?? 0;
-  const total = service && speedDef ? Math.round(basePrice * speedDef.multiplier) : 0;
+  // Unit price = the chosen format's price (falls back to the service's lowest).
+  const unit = service
+    ? format && service.prices[format] != null
+      ? service.prices[format]
+      : service.startsAt
+    : 0;
+  const total = service && speedDef ? Math.round(unit * speedDef.multiplier) : 0;
 
   function next() {
     setStep((s) => Math.min(5, s + 1));
@@ -138,7 +137,10 @@ export function OrderWizard({ prefill }: OrderWizardProps = {}) {
                 <button
                   key={s.slug}
                   type="button"
-                  onClick={() => setServiceSlug(s.slug)}
+                  onClick={() => {
+                    setServiceSlug(s.slug);
+                    setFormat("");
+                  }}
                   className={cn(
                     "text-left p-5 rounded-xl border transition-all",
                     serviceSlug === s.slug
@@ -161,25 +163,21 @@ export function OrderWizard({ prefill }: OrderWizardProps = {}) {
         {step === 3 && (
           <StepCard title="Which format?" description="Choose how you want the report delivered.">
             <div className="grid sm:grid-cols-2 gap-3">
-              {formats
-                .filter((f) =>
-                  service
-                    ? service.deliverables.some((d) => d.toLowerCase().includes(f.id)) || f.id === "bundle"
-                    : true
-                )
-                .map((f) => (
+              {service &&
+                Object.entries(service.prices).map(([id, price]) => (
                   <button
-                    key={f.id}
+                    key={id}
                     type="button"
-                    onClick={() => setFormat(f.id)}
+                    onClick={() => setFormat(id)}
                     className={cn(
-                      "p-5 rounded-xl border transition-all text-left",
-                      format === f.id
+                      "p-5 rounded-xl border transition-all text-left flex items-center justify-between gap-3",
+                      format === id
                         ? "border-[color:var(--color-copper-500)] bg-[color:var(--color-copper-50)]/40"
                         : "border-[color:var(--color-border-soft)] bg-white hover:border-[color:var(--color-copper-300)]"
                     )}
                   >
-                    <div className="font-medium text-[color:var(--color-navy-900)]">{f.label}</div>
+                    <span className="font-medium text-[color:var(--color-navy-900)]">{FORMAT_LABELS[id] ?? id}</span>
+                    <span className="font-numeric font-semibold text-[color:var(--color-copper-700)]">${price}</span>
                   </button>
                 ))}
             </div>
@@ -246,7 +244,7 @@ export function OrderWizard({ prefill }: OrderWizardProps = {}) {
 
             <div className="mt-6 rounded-xl bg-[color:var(--color-warm-cream)] border border-[color:var(--color-border-soft)] p-5">
               <SummaryRow label="Report" value={service?.name ?? "—"} />
-              <SummaryRow label="Format" value={formats.find((f) => f.id === format)?.label ?? "—"} />
+              <SummaryRow label="Format" value={format ? (FORMAT_LABELS[format] ?? format) : "—"} />
               <SummaryRow label="Delivery" value={speedDef?.detail ?? "—"} />
               <SummaryRow label="Total (estimate)" value={`$${total}`} highlight />
               <p className="mt-3 text-xs text-[color:var(--color-stone)]">
