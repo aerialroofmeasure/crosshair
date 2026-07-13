@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/eyebrow";
 import { ServiceArt } from "@/components/marketing/service-art";
-import { PriceTag } from "@/components/marketing/price-tag";
+import { ServicePrices } from "@/components/marketing/service-prices";
 import { services } from "@/lib/site-config";
 
 export const metadata = {
@@ -59,19 +59,11 @@ export default function ServicesPage() {
                     {s.blurb}
                   </p>
 
-                  <ul className="mt-6 flex flex-wrap gap-2">
-                    {s.deliverables.map((d) => (
-                      <li
-                        key={d}
-                        className="text-xs font-medium px-2.5 py-1 rounded-full bg-[color:var(--color-warm-cream)] text-[color:var(--color-charcoal)] transition-colors group-hover:bg-white group-hover:border group-hover:border-[color:var(--color-copper-300)]"
-                      >
-                        {d}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="mt-7 pt-6 border-t border-[color:var(--color-border-soft)]">
-                    <PriceTag price={s.startsAt} compareAt={s.compareAt} size="md" />
+                  <div className="mt-6 pt-5 border-t border-[color:var(--color-border-soft)]">
+                    <ServicePrices
+                      prices={s.prices}
+                      savings={Math.round(((s.compareAt - s.startsAt) / s.compareAt) * 100)}
+                    />
                   </div>
                   <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[color:var(--color-copper-600)] group-hover:text-[color:var(--color-copper-700)] transition-colors">
                     Explore report
