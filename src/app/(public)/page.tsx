@@ -42,7 +42,7 @@ export default function HomePage() {
               <p className="mt-5 text-base md:text-lg text-white/80 max-w-xl leading-relaxed">
                 Aerial roof, wall and gutter reports — PDF, ESX and XML — built for
                 accurate estimates and insurance claims. 24-hour standard delivery,
-                6-hour rush.
+                2–4 hour rush.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
@@ -232,7 +232,7 @@ export default function HomePage() {
                   />
                   <Promise
                     icon={<Clock className="h-5 w-5" />}
-                    title="6-hour rush SLA"
+                    title="2–4 hour rush SLA"
                     body="Order rush by 11am ET and have your report before close of business. Miss the window? 50% off."
                   />
                   <Promise
@@ -327,11 +327,11 @@ function Promise({ icon, title, body }: { icon: React.ReactNode; title: string; 
 const steps = [
   {
     title: "Tell us the property",
-    body: "Enter the address or paste a Google Maps link. Choose the report type — residential, commercial, wall, gutter or insurance.",
+    body: "Enter the address or paste a Google or Apple Maps link. Choose the report type — residential, commercial, wall, gutter or insurance.",
   },
   {
     title: "Pick format & speed",
-    body: "PDF, ESX, XML or a bundle. Standard delivery within 24 hours, rush in 6, or express in 2 — your choice.",
+    body: "PDF, ESX, XML or a bundle. Standard delivery within 24 hours, or rush in 2–4 — your choice.",
   },
   {
     title: "Receive & estimate",

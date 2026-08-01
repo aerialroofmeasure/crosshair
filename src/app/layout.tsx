@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     template: "%s · Aerial Roof Measure",
   },
   description:
-    "Premium aerial roof, wall and gutter measurement reports for contractors, adjusters and architects. 98%+ accuracy guarantee. 6-hour rush available.",
+    "Premium aerial roof, wall and gutter measurement reports for contractors, adjusters and architects. 98%+ accuracy guarantee. 2–4 hour rush available.",
   metadataBase: new URL("https://aerialroofmeasure.com"),
   openGraph: {
     title: "Aerial Roof Measure",

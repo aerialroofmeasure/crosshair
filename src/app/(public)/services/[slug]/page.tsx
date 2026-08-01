@@ -6,6 +6,7 @@ import { Eyebrow } from "@/components/marketing/eyebrow";
 import { TatBadge } from "@/components/marketing/tat-badge";
 import { ServiceArt } from "@/components/marketing/service-art";
 import { PriceTag } from "@/components/marketing/price-tag";
+import { ServicePrices } from "@/components/marketing/service-prices";
 import { services } from "@/lib/site-config";
 
 const detailCopy: Record<string, { intro: string; includes: string[]; ideal: string[]; usedBy: string[] }> = {
@@ -162,7 +163,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             {copy.intro}
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-6">
-            <ButtonLink href="/order" size="lg" variant="secondary">
+            <ButtonLink href={`/order?service=${service.slug}`} size="lg" variant="secondary">
               Order this report
               <ArrowRight className="h-4 w-4" />
             </ButtonLink>
@@ -212,15 +213,13 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           <aside className="space-y-6 lg:sticky lg:top-28 self-start">
             <div className="rounded-2xl border border-[color:var(--color-border-soft)] bg-white p-7">
               <ServiceArt slug={service.slug} name={service.name} />
-              <h3 className="mt-5 text-lg font-display">Available formats</h3>
-              <ul className="mt-3 space-y-2 text-sm">
-                {service.deliverables.map((d) => (
-                  <li key={d} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-[color:var(--color-copper-500)]" />
-                    {d}
-                  </li>
-                ))}
-              </ul>
+              <h3 className="mt-5 text-lg font-display">Formats &amp; pricing</h3>
+              <p className="mt-1 mb-4 text-xs text-[color:var(--color-stone)]">Tap a format to start your order.</p>
+              <ServicePrices
+                prices={service.prices}
+                slug={service.slug}
+                savings={Math.round(((service.compareAt - service.startsAt) / service.compareAt) * 100)}
+              />
             </div>
 
             <div className="rounded-2xl bg-[color:var(--color-navy-900)] text-white p-7">
@@ -230,7 +229,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                   <li key={u}>· {u}</li>
                 ))}
               </ul>
-              <ButtonLink href="/order" size="md" variant="secondary" className="mt-6 w-full justify-center">
+              <ButtonLink href={`/order?service=${service.slug}`} size="md" variant="secondary" className="mt-6 w-full justify-center">
                 Order now
                 <ArrowRight className="h-4 w-4" />
               </ButtonLink>

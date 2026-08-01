@@ -59,7 +59,7 @@ export default async function NewOrderPage() {
                 />
                 <PromiseRow
                   icon={<Zap className="h-3.5 w-3.5" />}
-                  title="6-hour rush SLA"
+                  title="2–4 hour rush SLA"
                   body="Miss the window? 50% off"
                 />
                 <PromiseRow

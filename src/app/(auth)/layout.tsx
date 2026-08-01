@@ -80,7 +80,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               <Promise
                 delay="0.5s"
                 icon={<Clock className="h-4 w-4" />}
-                title="6-hour rush SLA"
+                title="2–4 hour rush SLA"
                 body="Order by 11am ET, delivered before close of business."
               />
               <Promise

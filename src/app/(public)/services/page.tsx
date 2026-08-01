@@ -30,10 +30,9 @@ export default function ServicesPage() {
         <div className="container-page">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {services.map((s) => (
-              <Link
+              <div
                 key={s.slug}
-                href={`/services/${s.slug}`}
-                className="group relative rounded-2xl border border-[color:var(--color-border-soft)] bg-white p-8 transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.025] hover:border-[color:var(--color-copper-400)] hover:shadow-[0_28px_60px_-18px_rgba(11,30,58,0.28),0_8px_22px_-8px_rgba(201,137,47,0.18)] hover:bg-gradient-to-b hover:from-white hover:to-[color:var(--color-copper-50)]/40 overflow-hidden"
+                className="group relative rounded-2xl border border-[color:var(--color-border-soft)] bg-white p-8 transition-all duration-500 ease-out hover:-translate-y-1 hover:border-[color:var(--color-copper-400)] hover:shadow-[0_28px_60px_-18px_rgba(11,30,58,0.28),0_8px_22px_-8px_rgba(201,137,47,0.18)] overflow-hidden"
               >
                 {/* Copper glow that pulses out from top-right on hover */}
                 <span
@@ -47,30 +46,36 @@ export default function ServicesPage() {
                 />
 
                 <div className="relative">
-                  <ServiceArt
-                    slug={s.slug}
-                    name={s.name}
-                    className="transition-transform duration-500 ease-out group-hover:-translate-y-1"
-                  />
-                  <h2 className="mt-6 text-2xl font-display transition-colors group-hover:text-[color:var(--color-copper-700)]">
-                    {s.name}
-                  </h2>
-                  <p className="mt-2 text-[15px] text-[color:var(--color-stone)] leading-relaxed">
-                    {s.blurb}
-                  </p>
+                  <Link href={`/services/${s.slug}`} className="block">
+                    <ServiceArt
+                      slug={s.slug}
+                      name={s.name}
+                      className="transition-transform duration-500 ease-out group-hover:-translate-y-1"
+                    />
+                    <h2 className="mt-6 text-2xl font-display transition-colors group-hover:text-[color:var(--color-copper-700)]">
+                      {s.name}
+                    </h2>
+                    <p className="mt-2 text-[15px] text-[color:var(--color-stone)] leading-relaxed">
+                      {s.blurb}
+                    </p>
+                  </Link>
 
                   <div className="mt-6 pt-5 border-t border-[color:var(--color-border-soft)]">
                     <ServicePrices
                       prices={s.prices}
+                      slug={s.slug}
                       savings={Math.round(((s.compareAt - s.startsAt) / s.compareAt) * 100)}
                     />
                   </div>
-                  <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[color:var(--color-copper-600)] group-hover:text-[color:var(--color-copper-700)] transition-colors">
+                  <Link
+                    href={`/services/${s.slug}`}
+                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[color:var(--color-copper-600)] hover:text-[color:var(--color-copper-700)] transition-colors"
+                  >
                     Explore report
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                  </div>
+                  </Link>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </div>

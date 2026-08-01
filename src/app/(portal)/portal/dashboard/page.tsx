@@ -135,7 +135,7 @@ export default async function DashboardPage() {
         <EmptyCard
           icon={<FolderOpen className="h-6 w-6" />}
           title="No orders yet"
-          description="Place your first order and we'll have it ready in 24 hours — or rush it in 6."
+          description="Place your first order and we'll have it ready in 24 hours — or rush it in 2–4."
           action={
             <>
               <ButtonLink href="/portal/orders/new" size="md">

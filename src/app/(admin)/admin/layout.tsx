@@ -27,7 +27,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div className="container-page flex items-center justify-between gap-6 h-16 relative">
           <div className="flex items-center gap-6">
             <Link href="/admin" aria-label="Admin home" className="flex items-center">
-              <Logo tone="white" variant="lockup" className="h-9 w-auto" noTagline />
+              <Logo tone="white" variant="lockup" className="h-11 w-auto" />
             </Link>
             <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full chip-adm-dark px-2.5 py-1 text-[10px] font-semibold tracking-[0.18em] uppercase">
               Admin

@@ -61,7 +61,7 @@ export default function AboutPage() {
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {[
               { icon: <ShieldCheck className="h-5 w-5" />, title: "Accuracy you can quote against", body: "98%+ on every report. If we miss the bar, we re-measure free." },
-              { icon: <Gauge className="h-5 w-5" />, title: "Turnaround that matches your day", body: "Rush in 6 hours. Express in 2. Standard in 24. You know exactly when files land." },
+              { icon: <Gauge className="h-5 w-5" />, title: "Turnaround that matches your day", body: "Rush in 2–4 hours. Standard in 24. You know exactly when files land." },
               { icon: <Eye className="h-5 w-5" />, title: "Transparency, not theatre", body: "No hidden fees, no membership tier, no buy-one-get-one promos. You see the price, you get the report." },
             ].map((p, i) => (
               <Reveal key={p.title} delay={i * 120}>

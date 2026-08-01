@@ -14,7 +14,7 @@ const faqs = [
   },
   {
     q: "What's the standard turnaround?",
-    a: "Standard delivery is within 24 hours of order confirmation. Rush is 6 hours (orders placed before 11am ET ship same business day). Express is 2 hours, subject to availability — usually available Mon–Fri, 9a–4p ET.",
+    a: "Standard delivery is within 24 hours of order confirmation. Rush is 2–4 hours (orders placed before 11am ET ship same business day).",
   },
   {
     q: "Do you support Xactimate (ESX)?",
@@ -53,8 +53,8 @@ const faqs = [
     a: "Yes — adjusters and restoration teams make up a large share of our orders. The ESX-ready insurance report type is purpose-built for storm claim workflows and integrates with the documentation adjusters typically attach to claim files.",
   },
   {
-    q: "What does the 6-hour rush guarantee actually mean?",
-    a: "If you order a rush report before 11am ET on a business day and we don't deliver within 6 hours of the confirmation timestamp, the rush fee is refunded and the report is 50% off. The clock starts when we confirm imagery availability, not when you click order.",
+    q: "What does the 2–4 hour rush guarantee actually mean?",
+    a: "If you order a rush report before 11am ET on a business day and we don't deliver within 4 hours of the confirmation timestamp, the rush fee is refunded and the report is 50% off. The clock starts when we confirm imagery availability, not when you click order.",
   },
 ];
 

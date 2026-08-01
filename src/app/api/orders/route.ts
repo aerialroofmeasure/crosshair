@@ -168,7 +168,7 @@ function validate(p: OrderPayload): string[] {
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.customer_email)) errs.push("Email looks invalid");
   if (!p.service_slug?.trim()) errs.push("Service required");
   if (!p.format?.trim()) errs.push("Format required");
-  if (!["standard", "rush", "express"].includes(p.speed)) errs.push("Speed invalid");
+  if (!["standard", "rush"].includes(p.speed)) errs.push("Speed invalid");
   if (!["type", "link"].includes(p.location_mode as LocationMode)) errs.push("Location mode invalid");
   if (p.location_mode === "type") {
     if (!p.street?.trim()) errs.push("Street required");

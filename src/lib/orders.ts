@@ -8,13 +8,11 @@ import { services } from "@/lib/site-config";
 export const SPEED_MULTIPLIERS = {
   standard: 1,
   rush: 1.5,
-  express: 2,
 } as const;
 
 export const SPEED_LABELS = {
   standard: "Standard · 24h",
-  rush: "Rush · 6h",
-  express: "Express · 2h",
+  rush: "Rush · 2–4h",
 } as const;
 
 export type Format = "pdf" | "esx" | "xml" | "esx_pdf" | "xml_pdf";
@@ -160,5 +158,5 @@ export function formatLabelShort(format: string): string {
 
 /** Speed label helper — short badge text. */
 export function speedLabelShort(speed: string): string {
-  return speed === "rush" ? "Rush 6h" : speed === "express" ? "Express 2h" : "Standard 24h";
+  return speed === "rush" ? "Rush 2–4h" : "Standard 24h";
 }

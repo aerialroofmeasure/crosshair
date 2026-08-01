@@ -30,7 +30,7 @@ const US_STATES = [
 ];
 
 const mapsLinkRegex =
-  /^https?:\/\/(www\.)?(google\.[a-z.]+\/maps|maps\.google\.[a-z.]+|maps\.app\.goo\.gl|goo\.gl\/maps)\/.+/i;
+  /^https?:\/\/(www\.)?(google\.[a-z.]+\/maps|maps\.google\.[a-z.]+|maps\.app\.goo\.gl|goo\.gl\/maps|maps\.apple\.com|beta\.maps\.apple\.com)[/?].+/i;
 
 export function LocationInput({ value, onChange }: LocationInputProps) {
   const [mode, setMode] = useState<Mode>(value?.mode ?? "type");
@@ -68,7 +68,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
       <div
         role="tablist"
         aria-label="Choose how to enter the location"
-        className="grid grid-cols-2 gap-3 p-1.5 rounded-2xl bg-[color:var(--color-warm-cream)] border border-[color:var(--color-border-soft)]"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 p-1.5 rounded-2xl bg-[color:var(--color-warm-cream)] border border-[color:var(--color-border-soft)]"
       >
         <ModeTile
           icon={<MapPin className="h-5 w-5" />}
@@ -80,7 +80,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
         <ModeTile
           icon={<Link2 className="h-5 w-5" />}
           label="Paste map link"
-          hint="Google Maps URL"
+          hint="Google or Apple Maps URL"
           active={mode === "link"}
           onClick={() => selectMode("link")}
         />
@@ -129,7 +129,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
           <div>
             <label className="block">
               <span className="block text-sm font-medium text-[color:var(--color-navy-900)] mb-2">
-                Google Maps link
+                Google or Apple Maps link
                 <span className="text-[color:var(--color-copper-600)]"> *</span>
               </span>
               <div className="relative">
@@ -141,7 +141,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
                     setMapsLink(e.target.value);
                     update({ mapsLink: e.target.value });
                   }}
-                  placeholder="https://maps.app.goo.gl/..."
+                  placeholder="maps.app.goo.gl/…  or  maps.apple.com/…"
                   className={cn(
                     "w-full h-12 px-4 pr-11 rounded-lg border bg-white focus:outline-none focus:ring-2 transition",
                     linkValid
@@ -161,12 +161,12 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
               </div>
             </label>
             <p className="mt-2 text-xs text-[color:var(--color-stone)]">
-              Open the property in Google Maps, tap <strong>Share</strong>, copy the link, and paste here.
-              Works with <code className="text-[color:var(--color-charcoal)]">maps.app.goo.gl</code> short links too.
+              Open the property in Google or Apple Maps, tap <strong>Share</strong>, copy the link, and paste here.
+              Works with Google (<code className="text-[color:var(--color-charcoal)]">maps.app.goo.gl</code>) and Apple (<code className="text-[color:var(--color-charcoal)]">maps.apple.com</code>) links.
             </p>
             {!linkValid && (
               <p className="mt-1 text-xs text-red-600">
-                That doesn&apos;t look like a Google Maps link. Make sure you&apos;ve copied the share URL.
+                That doesn&apos;t look like a Google or Apple Maps link. Make sure you&apos;ve copied the share URL.
               </p>
             )}
           </div>

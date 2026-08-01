@@ -3,7 +3,12 @@ import { OrderWizard } from "@/components/order/order-wizard";
 
 export const metadata = { title: "Place an order" };
 
-export default function OrderPage() {
+export default async function OrderPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ service?: string; format?: string }>;
+}) {
+  const { service, format } = await searchParams;
   return (
     <>
       <section className="relative bg-hero text-white pt-12 pb-20 md:pt-16 md:pb-24 overflow-hidden">
@@ -19,7 +24,7 @@ export default function OrderPage() {
       </section>
       <section className="-mt-12 md:-mt-14 pb-20 relative z-10">
         <div className="container-narrow">
-          <OrderWizard />
+          <OrderWizard initialService={service} initialFormat={format} />
         </div>
       </section>
     </>

@@ -12,7 +12,7 @@ interface TatBadgeProps {
 export function TatBadge({
   tone = "light",
   className,
-  label = "6-hour rush available",
+  label = "2–4 hour rush available",
   shine = true,
 }: TatBadgeProps) {
   return (

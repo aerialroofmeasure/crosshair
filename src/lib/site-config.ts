@@ -13,8 +13,7 @@ export const siteConfig = {
   // TAT promise — adjustable later
   tat: {
     standard: "24 hours",
-    rush: "6 hours",
-    express: "2 hours",
+    rush: "2–4 hours",
   },
   // Accuracy promise
   accuracy: "98%+",
@@ -94,9 +93,9 @@ export const services: Service[] = [
     slug: "multifamily",
     name: "Multifamily",
     blurb: "Apartments, condos and complex roof systems — measured plane by plane.",
-    deliverables: ["PDF report", "ESX", "XML"],
+    deliverables: ["PDF report"],
     icon: "buildings",
-    prices: { pdf: 30, esx: 30, xml: 30 },
+    prices: { pdf: 30 },
     startsAt: 30,
     compareAt: 54,
   },

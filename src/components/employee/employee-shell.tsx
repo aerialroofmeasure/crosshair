@@ -98,7 +98,7 @@ export function EmployeeShell({ email, name, isAdmin, children }: EmployeeShellP
 
         <div className="px-6 py-7 border-b border-white/[0.08]">
           <Link href="/employee" aria-label="Employee home" className="inline-block transition-opacity hover:opacity-90">
-            <Logo tone="white" variant="lockup" className="h-12 w-auto" noTagline />
+            <Logo tone="white" variant="lockup" className="h-12 w-auto" />
           </Link>
           <span className="mt-3 inline-flex items-center gap-1.5 rounded-full chip-emp-dark px-2.5 py-1 text-[10px] font-semibold tracking-[0.18em] uppercase">
             Fulfillment
@@ -142,7 +142,7 @@ export function EmployeeShell({ email, name, isAdmin, children }: EmployeeShellP
       <div className="flex-1 flex flex-col min-w-0">
         <header className="lg:hidden bg-[color:var(--color-navy-900)] text-white px-5 py-4 flex items-center justify-between sticky top-0 z-30">
           <Link href="/employee" aria-label="Employee home">
-            <Logo tone="white" variant="lockup" className="h-9 w-auto" noTagline />
+            <Logo tone="white" variant="lockup" className="h-10 w-auto" />
           </Link>
           <button
             onClick={() => setDrawer(true)}
@@ -164,7 +164,7 @@ export function EmployeeShell({ email, name, isAdmin, children }: EmployeeShellP
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setDrawer(false)} aria-hidden />
           <aside className="absolute left-0 top-0 bottom-0 w-72 bg-[color:var(--color-navy-900)] text-white flex flex-col">
             <div className="px-5 py-4 flex items-center justify-between border-b border-white/[0.08]">
-              <Logo tone="white" variant="lockup" className="h-10 w-auto" noTagline />
+              <Logo tone="white" variant="lockup" className="h-11 w-auto" />
               <button onClick={() => setDrawer(false)} className="p-2 -mr-2 rounded-lg hover:bg-white/5 transition" aria-label="Close menu">
                 <X className="h-5 w-5" />
               </button>

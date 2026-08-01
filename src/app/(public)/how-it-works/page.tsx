@@ -12,7 +12,7 @@ const steps = [
   {
     icon: MapPin,
     title: "Tell us the property",
-    body: "Enter the street address, or paste a Google Maps link if you've already pulled it up. Pick the report type — residential, commercial, multifamily, wall, gutter or insurance / ESX.",
+    body: "Enter the street address, or paste a Google or Apple Maps link if you've already pulled it up. Pick the report type — residential, commercial, multifamily, wall, gutter or insurance / ESX.",
     detail: "We confirm the exact rooftop within minutes so there's no ambiguity over which structure to measure.",
   },
   {
@@ -24,7 +24,7 @@ const steps = [
   {
     icon: Send,
     title: "Choose your turnaround",
-    body: "Standard 24 hours, rush 6 hours, or express 2 hours. Rush and express are subject to a small premium — you'll see the exact total before you confirm.",
+    body: "Standard 24 hours or rush 2–4 hours. Rush is subject to a small premium — you'll see the exact total before you confirm.",
     detail: "Rush orders placed before 11am ET ship same business day. Miss the window? 50% off, our policy.",
   },
   {
